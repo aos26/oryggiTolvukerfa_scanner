@@ -1,0 +1,38 @@
+SCANNER
+=======
+
+Nöfn höfunda og tölvupóstar:
+
+   Erling Óskar Kristjánsson  -  eok4@hi.is
+   Andrea Ósk Sigurðardóttir  -  aos26@hi.is
+
+
+Nafn hugbúnaðarins að eigin vali:
+
+   Portscanner
+
+
+Tilgangur í stuttu máli – hámark 20 línur :
+
+   [Tilgangur
+   
+   Portscanner sem getur fundið TCP port.]
+
+
+Leiðbeiningar um keyrslu:
+
+   [Leiðbeiningar
+
+   Úr lýsingu:
+   "Gefið er fullt fyrir forrit sem keyrir og framkvæmir þær aðgerðir sem beðið er um í verkefnislýsingu. 
+   Skilyrði er að kennari þurfi aðeins að setja upp virtualenv og keyra inn requirements.txt (sjá aftast) 
+   til að koma upp virku keyrsluumhverfi og kóði keyri villulaust fyrir þau notkunartilvik sem eru skilgreind 
+   í leiðbeiningum höfunda (README skrá – sjá 1.1.1)."
+
+   ]
+
+
+Skrár:
+
+   scanner.py    - grind fyrir skanner
+   test.sh       - bash scripta til að prófa skanner
