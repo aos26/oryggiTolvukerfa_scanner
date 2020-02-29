@@ -1,6 +1,7 @@
 # Ekki pakka virtualenv með og hreinsið út allar .pyc skrár.
 
-
-# virtualenv
-
-# .pyc ??
+*.tar
+*.tar.gz
+*.pyc
+.vscode/
+VENV/
