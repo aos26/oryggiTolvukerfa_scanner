@@ -4,4 +4,6 @@
 *.tar.gz
 *.pyc
 .vscode/
+.vscode/*
 VENV/
+VENV/*

@@ -36,3 +36,57 @@ Skrár:
 
    scanner.py    - grind fyrir skanner
    test.sh       - bash scripta til að prófa skanner
+
+
+
+Setting up Python Virtual Environment (virtualenv)
+
+   virtualenv is a tool to create an isolated Python environment on your Linode. 
+   This can be extremely powerful as you can create a virtual environment and 
+   install all Python executables/packages to it, leaving no dependencies 
+   outside of your created virtual environment.
+
+   Navigate to your working directory.
+   Run the following commands:
+      sudo apt-get install virtualenv
+      mkdir scanner
+      cd scanner
+      virtualenv -p python3 VENV
+
+   Start the virtualenv, which we've named VENV
+      source VENV/bin/activate
+      
+   Install dependencies (listed within requirements.txt)
+      pip install -r requirements.txt
+
+   Do your work.
+
+   When you finish working, run the following command to stop VENV:
+      deactivate
+
+
+Gagnlegir tenglar
+
+   IP, CIDR, Network ranges
+      https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing
+      https://maxchadwick.xyz/blog/what-is-cidr-notation
+      https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking
+
+      https://docs.python.org/3/library/ipaddress.html
+      https://docs.python.org/3/howto/ipaddress.html
+      
+
+
+   Host discovery
+      https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol
+      https://nmap.org/book/man-host-discovery.html
+
+   Network Scanning
+      https://www.geeksforgeeks.org/network-scanner-in-python/
+      https://www.edureka.co/blog/nmap-tutorial/
+
+   Argparser
+      https://docs.python.org/3/library/argparse.html
+
+   Socket
+      https://docs.python.org/3/library/socket.html
