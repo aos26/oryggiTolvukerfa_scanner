@@ -31,15 +31,20 @@ def extract_hosts(host):
 	return IPs
 
 def ping_host(address):
-	res = subprocess.call(['ping', '-c', '3', address]) 
+	
+	res = subprocess.call(['ping', '-c', '3', address], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) 
 	if res == 0: 
+		print('Ping to address %s - OK' % address)
 		return True
-	return False
+	else:
+		print('Ping to address %s - Failed or no response' % address)
+		return False
 
 
 # Removes inactive hosts
 def perform_host_discovery(hosts):
 	active_hosts = []
+	print('Running host discovery for {} ports.'.format(len(hosts)))
 	for host in hosts:
 		if ping_host(host):
 			active_hosts.append(host)
@@ -64,7 +69,9 @@ def scan_multiple_hosts(hosts, lowport, highport,
 		hosts = hosts + ips
 
 	if host_discovery == 1:
+		print("-" * 90)
 		print('Performing "host discovery" to reduce the set of IP ranges.')
+		print("-" * 90)
 		hosts = perform_host_discovery(hosts)
 
 	if shuffle_ports == 1: # The scanner will be responsible for shuffling the ports
