@@ -11,6 +11,7 @@ import numpy as np
 from numpy.random import shuffle
 
 from ConnectScan import ConnectScan
+from SynScan import SynScan
 
 
 # Param: host of dtype str.
@@ -94,12 +95,12 @@ def scan_multiple_hosts(hosts, lowport, highport,
 		for host in hosts:
 			scanner.connect_scan(host, lowport, highport, shuffle_ports==1, closed_and_filtered==1)
 
-	# else:
+	else:
 		# Perform SYN scan
-		# scanner = SynScan()
+		scanner = SynScan()
 		# TODO: loop through the hosts and scan each of them
-		# for host in hosts:
-		# 	scanner.syn_scan(host, lowport, highport, shuffle_ports, closed_and_filtered)
+		for host in hosts:
+			scanner.syn_scan(host, lowport, highport, shuffle_ports, closed_and_filtered)
 
 	print("-" * 90)
 	print("-" * 90)
