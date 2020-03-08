@@ -12,25 +12,31 @@ class SynScan():
 
 	well_known_port_descriptions = None
 	failed_hostnames = 0
-	#SYNACK = 0x12
-	#RSTACK = 0x14
 
 	def __init__(self):
+		"""Initialize data"""
 		self.failed_hostnames = 0
 		self.read_port_descriptions()
 
-
 	def read_port_descriptions(self):
-		# Read port descriptions from a local file
+		"""Read port descriptions from a local file"""
 		# File contents retrieved from https://github.com/maraisr/ports-list/blob/master/tcp.csv
 		self.well_known_port_descriptions = np.loadtxt("new_port_description.csv", delimiter=';', dtype=str)
 
-
-
 	def syn_scan(self, hostname, lowport, highport, shuffle_ports, closed_and_filtered):
+		"""
+		Performs syn scan on host
 
+		hostname -- host to be scanned
+		lowport -- lowest port number to be scanned
+		highport -- highest port number to be scanned
+		shuffle_ports -- 1 if ports should be shuffled
+		shuffle_hosts -- 1 if hosts should be shuffled
+		host_discovery -- 1 if host discovery should be performed
+		closed_and_filtered -- 1 if details of ports scanned should be printed
+		"""
 		try:
-    	# Thessi adgerd getur tekid hostname eda ip-address, skilar alltaf ip-address
+    	# Takes in hostname or ip-address, returns ip-address
 			serverIP = socket.gethostbyname(hostname)
 		except socket.gaierror:
 			self.failed_hostnames += 1
@@ -54,6 +60,7 @@ class SynScan():
 		try:
 			open = 0
 			closed_or_filtered = 0
+			timed_out = 0
 
 			# Try all the ports in the given range
 			for port in ports:
@@ -62,27 +69,32 @@ class SynScan():
 				port_description = self.well_known_port_descriptions[port,1]
 				srcport = RandShort()
 				conf.verb = 0 # Hide output
-				SYNACKpkt = sr1(IP(dst = serverIP)/TCP(sport = srcport, dport = port, flags = "S"), timeout=2)
-				print(SYNACKpkt)
+				SYNACKpkt = sr1(IP(dst = serverIP)/TCP(sport = srcport, dport = port, flags = "S", options=[('Timestamp', (0,0))]), timeout=0.5)
 
-
-        	# Skanninn getur greint milli opinna, lokadra og blokkadra porta.
+        	# Check if answer was received (is not None).
 				if SYNACKpkt:
 					result = SYNACKpkt.getlayer(TCP).flags
 				
+					# Check whether port is open
 					if result == 0x12:
 						open += 1
 						print("Port, %s - Open               (%s)" % (port, port_description))
 					else:
 						closed_or_filtered += 1
 						if closed_and_filtered:
-							print("Port, %s - Closed or Filtered (%s)" % (port, self.well_known_port_descriptions[port,1]))
+							print("Port, %s - Closed (%s)" % (port, self.well_known_port_descriptions[port,1]))
+				
+			# No answer, port is likely filtered
 				else:
-					continue
-
+					print("Timeout reached: Port", port)
+					if closed_and_filtered:
+							print("Port, %s - Filtered (%s)" % (port, self.well_known_port_descriptions[port,1]))
+					closed_or_filtered += 1
+					
+				# Send RST packet
 				RSTpkt = IP(dst = serverIP)/TCP(sport = srcport, dport = port, flags = "R")
 				send(RSTpkt)
-			#sr(IP(dst=serverIP)/TCP(dport=ports, flags='AR'), timeout=1)
+
 		except KeyboardInterrupt:
 			print("You pressed Ctrl+C")
 			RSTpkt = IP(dst = serverIP)/TCP(sport = srcport, dport = port, flags = "R")

@@ -13,21 +13,31 @@ class ConnectScan():
 	failed_hostnames = 0
 
 	def __init__(self):
+		"""Initialize data"""
 		self.failed_hostnames = 0
 		self.read_port_descriptions()
 
 
 	def read_port_descriptions(self):
-		# Read port descriptions from a local file
+		"""Read port descriptions from a local file"""
 		# File contents retrieved from https://github.com/maraisr/ports-list/blob/master/tcp.csv
 		self.well_known_port_descriptions = np.loadtxt("new_port_description.csv", delimiter=';', dtype=str)
 
 
-
 	def connect_scan(self, hostname, lowport, highport, shuffle_ports, closed_and_filtered):
+		"""
+		Performs connect scan on host
 
+		hostname -- host to be scanned
+		lowport -- lowest port number to be scanned
+		highport -- highest port number to be scanned
+		shuffle_ports -- 1 if ports should be shuffled
+		shuffle_hosts -- 1 if hosts should be shuffled
+		host_discovery -- 1 if host discovery should be performed
+		closed_and_filtered -- 1 if details of ports scanned should be printed
+		"""
 		try:
-    	# Thessi adgerd getur tekid hostname eda ip-address, skilar alltaf ip-address
+    	# Takes in hostname or ip-address, returns ip-address
 			serverIP = socket.gethostbyname(hostname)
 		except socket.gaierror:
 			self.failed_hostnames += 1
@@ -61,7 +71,7 @@ class ConnectScan():
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				sock.settimeout(1)
 
-        # Skanninn getur greint milli opinna, lokadra og blokkadra porta.
+        # Scanner can differentiate between open, closed and blocked ports.
 				result = sock.connect_ex((serverIP, port))
 				sock.close()
 				if result == 0:
