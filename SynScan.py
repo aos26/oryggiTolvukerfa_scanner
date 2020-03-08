@@ -2,12 +2,13 @@ import os
 import sys
 import socket
 import argparse
+from scapy.all import *
 from datetime import datetime
 
 import numpy as np
 from numpy.random import shuffle
 
-class ConnectScan():
+class SynScan():
 
 	well_known_port_descriptions = None
 	failed_hostnames = 0
@@ -17,16 +18,14 @@ class ConnectScan():
 		self.failed_hostnames = 0
 		self.read_port_descriptions()
 
-
 	def read_port_descriptions(self):
 		"""Read port descriptions from a local file"""
 		# File contents retrieved from https://github.com/maraisr/ports-list/blob/master/tcp.csv
 		self.well_known_port_descriptions = np.loadtxt("new_port_description.csv", delimiter=';', dtype=str)
 
-
-	def connect_scan(self, hostname, lowport, highport, shuffle_ports, closed_and_filtered):
+	def syn_scan(self, hostname, lowport, highport, shuffle_ports, closed_and_filtered):
 		"""
-		Performs connect scan on host
+		Performs syn scan on host
 
 		hostname -- host to be scanned
 		lowport -- lowest port number to be scanned
@@ -51,9 +50,9 @@ class ConnectScan():
 
 		print("-" * 90)
 		if hostname != serverIP:
-			print("Please wait, performing connect scan on host '%s', IP %s" % (hostname, serverIP))
+			print("Please wait, performing syn scan on host '%s', IP %s" % (hostname, serverIP))
 		else:
-			print("Please wait, performing connect scan on IP %s" % serverIP)
+			print("Please wait, performing syn scan on IP %s" % serverIP)
 		print("-" * 90)
 
 		t1 = datetime.now()
@@ -61,29 +60,45 @@ class ConnectScan():
 		try:
 			open = 0
 			closed_or_filtered = 0
+			timed_out = 0
 
 			# Try all the ports in the given range
 			for port in ports:
 
         # Get the port description
 				port_description = self.well_known_port_descriptions[port,1]
+				srcport = RandShort()
+				conf.verb = 0 # Hide output
+				SYNACKpkt = sr1(IP(dst = serverIP)/TCP(sport = srcport, dport = port, flags = "S", options=[('Timestamp', (0,0))]), timeout=0.5)
 
-				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-				sock.settimeout(1)
-
-        # Scanner can differentiate between open, closed and blocked ports.
-				result = sock.connect_ex((serverIP, port))
-				sock.close()
-				if result == 0:
-					open += 1
-					print("Port, %s - Open               (%s)" % (port, port_description))
+        	# Check if answer was received (is not None).
+				if SYNACKpkt:
+					result = SYNACKpkt.getlayer(TCP).flags
+				
+					# Check whether port is open
+					if result == 0x12:
+						open += 1
+						print("Port, %s - Open               (%s)" % (port, port_description))
+					else:
+						closed_or_filtered += 1
+						if closed_and_filtered:
+							print("Port, %s - Closed (%s)" % (port, self.well_known_port_descriptions[port,1]))
+				
+			# No answer, port is likely filtered
 				else:
-					closed_or_filtered += 1
+					print("Timeout reached: Port", port)
 					if closed_and_filtered:
-						print("Port, %s - Closed or Filtered (%s)" % (port, self.well_known_port_descriptions[port,1]))
+							print("Port, %s - Filtered (%s)" % (port, self.well_known_port_descriptions[port,1]))
+					closed_or_filtered += 1
+					
+				# Send RST packet
+				RSTpkt = IP(dst = serverIP)/TCP(sport = srcport, dport = port, flags = "R")
+				send(RSTpkt)
 
 		except KeyboardInterrupt:
 			print("You pressed Ctrl+C")
+			RSTpkt = IP(dst = serverIP)/TCP(sport = srcport, dport = port, flags = "R")
+			send(RSTpkt)
 			sys.exit()
 		except socket.gaierror:
 			print('Hostname could not be resolved. Exiting')

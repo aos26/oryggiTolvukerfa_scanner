@@ -11,13 +11,17 @@ import numpy as np
 from numpy.random import shuffle
 
 from ConnectScan import ConnectScan
+from SynScan import SynScan
 
 
-# Param: host of dtype str.
-# Tries to generate a range of useable hosts in a network from the string host, hoping that it is a CIDR notation.
-# Returns: a list of IP addresses generated from host if host was a CIDR notation,
-# 				 host unchanged otherwise.
 def extract_hosts(host):
+	"""
+	Return a list of IP addresses generated from host if host was a CIDR notation, otherwise unchanged
+
+	Parameters:
+	host -- host of dtype str
+	"""
+	
 	try:
 		# try to extract netrange from the user input
 		hosts = ipaddress.ip_network(host).hosts()
@@ -31,7 +35,8 @@ def extract_hosts(host):
 	return IPs
 
 def ping_host(address):
-	
+	"""Return True if address is ping-able, False otherwise"""
+
 	res = subprocess.call(['ping', '-c', '3', address], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) 
 	if res == 0: 
 		print('Ping to address %s - OK' % address)
@@ -41,8 +46,8 @@ def ping_host(address):
 		return False
 
 
-# Removes inactive hosts
 def perform_host_discovery(hosts):
+	"""Return list where inactive hosts have been removed"""
 	active_hosts = []
 	print('Running host discovery for {} ports.'.format(len(hosts)))
 	for host in hosts:
@@ -54,6 +59,19 @@ def perform_host_discovery(hosts):
 def scan_multiple_hosts(hosts, lowport, highport, 
 																shuffle_ports, shuffle_hosts, 
 																host_discovery, closed_and_filtered, type_of_scan):
+	"""
+	Prints information on scan for user and calls on scan type based on parameters
+
+	Parameters:
+	hosts -- list of hosts to be scanned
+	lowport -- lowest port number to be scanned
+	highport -- highest port number to be scanned
+	shuffle_ports -- 1 if ports should be shuffled
+	shuffle_hosts -- 1 if hosts should be shuffled
+	host_discovery -- 1 if host discovery should be performed
+	closed_and_filtered -- 1 if details of ports scanned should be printed
+	type_of_scan -- Type of scan to be performed (0 for connect scan, 1 for syn scan)
+	"""
 	IPs = []
 	for host in hosts:
 		# Iterate through the hosts and change netranges to lists
@@ -75,9 +93,9 @@ def scan_multiple_hosts(hosts, lowport, highport,
 		hosts = perform_host_discovery(hosts)
 
 	if shuffle_ports == 1: # The scanner will be responsible for shuffling the ports
-		print('Starting connect scan on ports {} to {} in a randomized order.'.format(lowport, highport))
+		print('Starting scan on ports {} to {} in a randomized order.'.format(lowport, highport))
 	else:
-		print('Starting connect scan on ports {} to {}.'.format(lowport, highport))
+		print('Starting scan on ports {} to {}.'.format(lowport, highport))
 
 	if shuffle_hosts == 1: # shuffle the hosts if prompted 
 		shuffle(hosts)
@@ -94,12 +112,12 @@ def scan_multiple_hosts(hosts, lowport, highport,
 		for host in hosts:
 			scanner.connect_scan(host, lowport, highport, shuffle_ports==1, closed_and_filtered==1)
 
-	# else:
+	else:
 		# Perform SYN scan
-		# scanner = SynScan()
+		scanner = SynScan()
 		# TODO: loop through the hosts and scan each of them
-		# for host in hosts:
-		# 	scanner.syn_scan(host, lowport, highport, shuffle_ports, closed_and_filtered)
+		for host in hosts:
+			scanner.syn_scan(host, lowport, highport, shuffle_ports, closed_and_filtered)
 
 	print("-" * 90)
 	print("-" * 90)
