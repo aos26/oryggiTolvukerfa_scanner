@@ -9,7 +9,7 @@ Nöfn höfunda og tölvupóstar:
 
 Nafn hugbúnaðarins að eigin vali:
 
-   Portscanner
+   Pointy Hats Scanner
 
 
 Tilgangur í stuttu máli – hámark 20 línur :
@@ -21,21 +21,45 @@ Tilgangur í stuttu máli – hámark 20 línur :
 
 Leiðbeiningar um keyrslu:
 
-   [Leiðbeiningar
+   Þetta forrit er hannað til að vera keyrt af skipanalínu með Python3.
+   Hægt er að keyra forritið í Python Virtual Environment með því að fylgja
+   leiðbeiningum um uppsetningu (Setting up Python Virtual Environment) að neðan.
+   Einnig er hægt að keyra forritið beint af skipanalínu, án virtual environment, 
+   ef allir nauðsynlegir pakkar eru uppsettir hjá notandanum.
+   
+   Forritið tekur við allt að 8 færibreytum (parameters), en þær eru eins og segir héreftir.
+   -ho --hosts             : Þeir hosts sem á að skanna. Getur verið URL á vefsíðu, stök IP tala eða IP range á CIDR sniði.
+                             Ekkert sjálfgefið.
+   -lo --lowport           : Neðri mörk þeirra porta sem þú vilt skanna, sjálfgefið er 1.
+                             Talan -lo skal vera lægri en -hi.
+   -hi --highport          : Efri mörk þeirra porta sem þú vilt skanna, sjálfgefið er 1023.
+                             Talan -lo skal vera lægri en -hi.
+   -ts --typeofscan        : Gerð skanns sem á að framkvæma. 0 fyrir Connect eða 1 fyrir SYN. Sjálfgefið er 0.
+   Næst koma 0 og 1 breytur, þar sem 0 þýðir Nei og 1 þýðir Já. Sjálfgefið er 0.
+   -sp --shuffleports      : Segir til um hvort það eigi að skanna valin port í handahófskenndri röð (1) eða hækkandi röð (0).
+   -sh --shufflehosts      : Segir til um hvort það eigi að skanna uppgefna hosts í handahófskenndri röð (1).
+   -hd --hostdiscovery     : Segir til um hvort það eigi að framkvæma host discovery fyrst (1) eða fara beint í skann (0).
+   -cf --closedandfiltered : Segir til um hvort það eigi að sýna lokuð og blokkuð port (1)
 
-   Úr lýsingu:
-   "Gefið er fullt fyrir forrit sem keyrir og framkvæmir þær aðgerðir sem beðið er um í verkefnislýsingu. 
-   Skilyrði er að kennari þurfi aðeins að setja upp virtualenv og keyra inn requirements.txt (sjá aftast) 
-   til að koma upp virku keyrsluumhverfi og kóði keyri villulaust fyrir þau notkunartilvik sem eru skilgreind 
-   í leiðbeiningum höfunda (README skrá – sjá 1.1.1)."
-
-   ]
 
 
 Skrár:
 
-   scanner.py    - grind fyrir skanner
-   test.sh       - bash scripta til að prófa skanner
+   -  PointyHats.py
+      Skrá sem tekur við inntaki frá notanda og kallar á aðgerð til 
+      að keyra viðeigandi skanner byggt á stillingum frá notanda.
+   -  SynScan.py
+      Skrá með klasa sem getur framkvæmt SYN Scan.
+   -  ConnectionScan.py
+      Skrá með klasa sem getur framkvæmt Connection (full TCP-handshake) Scan.
+   -  hostfile.txt
+      Skrá sem inniheldur lista yfir hosts sem má skanna.
+   -  requirements.txt
+      Skrá sem inniheldur lista yfir Python pakka sem þurfa að vera uppsettir til að hægt sé að keyra PointyHats.
+   -  well_known_port_descriptions.csv
+      Skrá sem inniheldur lista yfir vel þekkt ports og lýsingar á þeim.
+   -  test.sh
+      Bash scripta til að prófa Pointy Hats skannerinn.
 
 
 
@@ -46,11 +70,9 @@ Setting up Python Virtual Environment (virtualenv)
    install all Python executables/packages to it, leaving no dependencies 
    outside of your created virtual environment.
 
-   Navigate to your working directory.
+   Navigate to your working directory that contains the file that you want to run.
    Run the following commands:
       sudo apt-get install virtualenv
-      mkdir scanner
-      cd scanner
       virtualenv -p python3 VENV
 
    Start the virtualenv, which we've named VENV
@@ -59,12 +81,15 @@ Setting up Python Virtual Environment (virtualenv)
    Install dependencies (listed within requirements.txt)
       pip install -r requirements.txt
 
-   Do your work.
+   Run the program.
 
    When you finish working, run the following command to stop VENV:
       deactivate
 
 
+
+
+Allt hér fyrir neðan er fyrir höfunda.
 Gagnlegir tenglar
 
    IP, CIDR, Network ranges
