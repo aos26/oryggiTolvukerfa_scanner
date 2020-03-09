@@ -1,3 +1,4 @@
 127.0.0.0/24
 scanme.nmap.org/a
 scanme.nmap.org
+hackthissite.org

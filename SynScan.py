@@ -21,7 +21,7 @@ class SynScan():
 	def read_port_descriptions(self):
 		"""Read port descriptions from a local file"""
 		# File contents retrieved from https://github.com/maraisr/ports-list/blob/master/tcp.csv
-		self.well_known_port_descriptions = np.loadtxt("new_port_description.csv", delimiter=';', dtype=str)
+		self.well_known_port_descriptions = np.loadtxt("well_known_port_description.csv", delimiter=';', dtype=str)
 
 	def syn_scan(self, hostname, lowport, highport, shuffle_ports, closed_and_filtered):
 		"""

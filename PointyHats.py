@@ -129,7 +129,7 @@ Input:
 1.	Can specify 1 or more IP addresses (including CIDR) or hostnames.
 	Can specify IP addresses from a file (line by line).
 2.	Can specify the range of ports that should be scanned, default 1-1023
-3.	Can specify type of scan that should be used (Connect (full) or SYN). 
+3.	Can specify type of scan that should be used (Connect (full TCP handshake) or SYN). 
 4.	Can specify if should do "host discovery" first to analyze living IP addresses, or scan straight away
 5.	Can specify if port order should be shuffled.
 6.	Can specify if host order should be shuffled.
@@ -156,7 +156,7 @@ parser.add_argument('-lo', '--lowport', help="The low port", type=int, default=1
 parser.add_argument('-hi', '--highport', help="The high port", type=int, default=1023, required=False)
 parser.add_argument('-sp', '--shuffleports', help="1 to scan ports in a random order, 0 otherwise", type=int, default=0, required=False)
 parser.add_argument('-sh', '--shufflehosts', help="1 to scan hosts in a random order, 0 otherwise", type=int, default=0, required=False)
-parser.add_argument('-ts', '--typeofscan', help="0 for connect scan, 1 for SYN scan", type=int, default=1, required=False)
+parser.add_argument('-ts', '--typeofscan', help="0 for connect scan, 1 for SYN scan", type=int, default=0, required=False)
 parser.add_argument('-hd', '--hostdiscovery', help="1 to perform host discovery first, 0 otherwise", type=int, default=0, required=False)
 parser.add_argument('-cf', '--closedandfiltered', help="1 to show closed and filtered ports, 0 otherwise", type=int, default=0, required=False)
 
