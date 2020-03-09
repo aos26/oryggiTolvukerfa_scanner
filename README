@@ -41,6 +41,24 @@ Leiðbeiningar um keyrslu:
    -hd --hostdiscovery     : Segir til um hvort það eigi að framkvæma host discovery fyrst (1) eða fara beint í skann (0).
    -cf --closedandfiltered : Segir til um hvort það eigi að sýna lokuð og blokkuð port (1)
 
+   Here are some examples of how to run the program:
+   -  Perform Connect Scan on localhost ports 1 to 1023
+         python3 PointyHats.py -ho localhost
+   -  Perform Connect Scan on localhost ports 20 to 45 without host discovery
+         python3 PointyHats.py -ho localhost -lo 20 -hi 45 -hd 1
+   -  Perform Connect Scan on scanme.nmap.org AND localhost ports 20 to 25 with host discovery
+         python3 PointyHats.py -ho scanme.nmap.org localhost -lo 20 -hi 25 -hd 1
+   -  Perform Syn Scan on hackthissite.org ports 20 to 800 with host discovery
+         python3 PointyHats.py -ho hackthissite.org -ts 1 -lo 20 -hi 800 -hd 1
+   -  Perform Syn Scan on hackthissite.org AND 127.0.0.0/24 ports 20 to 800 
+      with host discovery, showing closed and filtered ports.
+         python3 PointyHats.py -ho hackthissite.org 127.0.0.0/24 -ts 1 -lo 20 -hi 800 -hd 1 -cf 1
+   -  Perform Syn Scan on 127.0.0.0/24 ports 20 to 800 without host discovery, 
+      showing closed and filtered ports, with both port order and host order shuffled.
+         python3 PointyHats.py -ho hackthissite.org 127.0.0.0/24 -ts 1 -lo 20 -hi 800 -cf 1 -sp 1 -sh 1
+   -  Perform Syn Scan on all hosts listed in hostfile.txt ports 20 to 25 with host discovery, 
+      showing closed and filtered ports, with both port order and host order shuffled.
+         python3 PointyHats.py -ho @hostfile.txt -ts 1 -lo 20 -hi 25 -hd 1 -cf 1 -sp 1 -sh 1 
 
 
 Skrár:
