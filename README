@@ -18,7 +18,9 @@ Tilgangur í stuttu máli:
    fundið opin TCP port. Port skannar geta verið notaðir af kerfis- og netöryggisstjórum til að 
    hafa yfirlit með sínu neti (e. network) eða af árásaraðilum til að bera kennsl á netþjónustur 
    (e. network service) sem eru í keyrslu á hýsitölvu (e. host) í von um að notfæra sér varnarleysi 
-   og veikleika. Þar að auki er SYN scan stundum notað sem hluti af DOS árásum.
+   og veikleika. Þar að auki er SYN scan stundum notað sem hluti af DOS árásum. Þetta forrit getur 
+   framkvæmt bæði Connection Scan og SYN scan, ásamt host discovery. Hægt er að keyra forritið af 
+   skipanalínu og hægt er að stilla það á ýmsa máta með því að setja inn mismunandi inntak.
 
 
 Leiðbeiningar um keyrslu:
