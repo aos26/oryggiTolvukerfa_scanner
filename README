@@ -12,20 +12,24 @@ Nafn hugbúnaðarins að eigin vali:
    Pointy Hats Scanner
 
 
-Tilgangur í stuttu máli – hámark 20 línur :
+Tilgangur í stuttu máli:
 
-   [Tilgangur
-   
-   Portscanner sem getur fundið TCP port.]
+   Port skanni (e. Port scanner) er forrit sem hefur þann tilgang að geta rannsakað netþjón og 
+   fundið opin TCP port. Port skannar geta verið notaðir af kerfis- og netöryggisstjórum til að 
+   hafa yfirlit með sínu neti (e. network) eða af árásaraðilum til að bera kennsl á netþjónustur 
+   (e. network service) sem eru í keyrslu á hýsitölvu (e. host) í von um að notfæra sér varnarleysi 
+   og veikleika. Þar að auki er SYN scan stundum notað sem hluti af DOS árásum.
 
 
 Leiðbeiningar um keyrslu:
 
    Þetta forrit er hannað til að vera keyrt af skipanalínu með Python3.
    Hægt er að keyra forritið í Python Virtual Environment með því að fylgja
-   leiðbeiningum um uppsetningu (Setting up Python Virtual Environment) að neðan.
+   leiðbeiningum um uppsetningu (Setting up Python Virtual Environment) að neðan. 
+   Keyra þarf SYN scan með rótarréttindum. Leiðbeiningar um keyrslu með rótarréttindum 
+   innan virtual environment eru í sama kafla.
    Einnig er hægt að keyra forritið beint af skipanalínu, án virtual environment, 
-   ef allir nauðsynlegir pakkar eru uppsettir hjá notandanum.
+   ef allir nauðsynlegir pakkar eru uppsettir hjá notandanum.  
    
    Forritið tekur við allt að 8 færibreytum (parameters), en þær eru eins og segir héreftir.
    -ho --hosts             : Þeir hosts sem á að skanna. Getur verið URL á vefsíðu, stök IP tala eða IP range á CIDR sniði.
@@ -41,23 +45,23 @@ Leiðbeiningar um keyrslu:
    -hd --hostdiscovery     : Segir til um hvort það eigi að framkvæma host discovery fyrst (1) eða fara beint í skann (0).
    -cf --closedandfiltered : Segir til um hvort það eigi að sýna lokuð og blokkuð port (1)
 
-   Here are some examples of how to run the program:
-   -  Perform Connect Scan on localhost ports 1 to 1023
+   Hér eru dæmi um hvernig skal keyra forritið:
+   -  Framkvæma Connect Scan á localhost port 1 til 1023
          python3 PointyHats.py -ho localhost
-   -  Perform Connect Scan on localhost ports 20 to 45 without host discovery
+   -  Framkvæma Connect Scan á localhost port 20 til 45 án host discovery
          python3 PointyHats.py -ho localhost -lo 20 -hi 45 -hd 1
-   -  Perform Connect Scan on scanme.nmap.org AND localhost ports 20 to 25 with host discovery
+   -  Framkvæma Connect Scan á scanme.nmap.org OG localhost port 20 til 25 með host discovery
          python3 PointyHats.py -ho scanme.nmap.org localhost -lo 20 -hi 25 -hd 1
-   -  Perform Syn Scan on hackthissite.org ports 20 to 800 with host discovery
+   -  Framkvæma Syn Scan á hackthissite.org port 20 til 800 með host discovery
          python3 PointyHats.py -ho hackthissite.org -ts 1 -lo 20 -hi 800 -hd 1
-   -  Perform Syn Scan on hackthissite.org AND 127.0.0.0/24 ports 20 to 800 
-      with host discovery, showing closed and filtered ports.
+   -  Framkvæma Syn Scan á hackthissite.org OG 127.0.0.0/24 port 20 til 800 
+      með host discovery, og sýna lokuð og blokkuð port.
          python3 PointyHats.py -ho hackthissite.org 127.0.0.0/24 -ts 1 -lo 20 -hi 800 -hd 1 -cf 1
-   -  Perform Syn Scan on 127.0.0.0/24 ports 20 to 800 without host discovery, 
-      showing closed and filtered ports, with both port order and host order shuffled.
+   -  Framkvæma Syn Scan á 127.0.0.0/24 port 20 til 800 án host discovery, 
+      og sýna lokuð og blokkuð ports, þar sem port og host eru skönnuð í handahófskenndri röð.
          python3 PointyHats.py -ho hackthissite.org 127.0.0.0/24 -ts 1 -lo 20 -hi 800 -cf 1 -sp 1 -sh 1
-   -  Perform Syn Scan on all hosts listed in hostfile.txt ports 20 to 25 with host discovery, 
-      showing closed and filtered ports, with both port order and host order shuffled.
+   -  Framkvæma Syn Scan á alla hosts sem eru nefndir í skránni hostfile.txt port 20 til 25 með host discovery, 
+      og sýna lokuð og blokkuð port, þar sem port og host eru skönnuð í handahófskenndri röð.
          python3 PointyHats.py -ho @hostfile.txt -ts 1 -lo 20 -hi 25 -hd 1 -cf 1 -sp 1 -sh 1 
 
 
@@ -80,31 +84,35 @@ Skrár:
       Bash scripta til að prófa Pointy Hats skannerinn.
 
 
+Uppsetning á Python Virtual Environment (virtualenv)
 
-Setting up Python Virtual Environment (virtualenv)
-
-   virtualenv is a tool to create an isolated Python environment on your Linode. 
-   This can be extremely powerful as you can create a virtual environment and 
-   install all Python executables/packages to it, leaving no dependencies 
-   outside of your created virtual environment.
-
-   Navigate to your working directory that contains the file that you want to run.
-   Run the following commands:
+   virtualenv er tól til þess að búa til einangrað Python umhverfi á Linode.
+   Þetta getur verið mjög öflugt þar sem þú getur búið til virtual environment
+   sem inniheldur öll nauðsynleg Python söfn, svo engin dependency eru utan það 
+   virutal environment sem þú bjóst til,
+   
+   Farðu að þeirri möppu sem á að vinna í, sem inniheldur skjalið sem þú vilt keyra.
+   Keyrðu eftirfarandi skipanir:
       sudo apt-get install virtualenv
       virtualenv -p python3 VENV
 
-   Start the virtualenv, which we've named VENV
+   Virkjaðu virtualenv, sem við höfum nefnt VENV
       source VENV/bin/activate
       
-   Install dependencies (listed within requirements.txt)
+   Nú skal hlaða niður dependencies (þau eru talin upp í requirements.txt)
       pip install -r requirements.txt
 
-   Run the program.
+   Keyrðu forritið.
 
-   When you finish working, run the following command to stop VENV:
+   Þegar þú hefur klárað vinnu þína geturðu keyrt eftirfarandi skipun til þess að slökkva á VENV:
       deactivate
 
-
+Til þess að keyra SYN scan þarf notandi að hafa rótarréttindi. Til þess að keyra með rótarréttindum
+innan VENV er byrjað á að virka VENV eins og venjulega (source VENV/bin/activate). Munurinn er að
+við keyrslu skráar þarf að keyra Python innan VENV með sudo. Þetta er gert með því að skrifa
+         sudo VENV/bin/python3 script.py
+Þannig gætum við framkvæmt Syn Scan á hackthissite.org port 20 til 800 með host discovery á eftirfarandi hátt:
+         sudo VENV/bin/python3 PointyHats.py -ho hackthissite.org -ts 1 -lo 20 -hi 800 -hd 1
 
 
 Allt hér fyrir neðan er fyrir höfunda.
