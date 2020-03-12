@@ -71,9 +71,11 @@ class ConnectScan():
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				sock.settimeout(1)
 
-        # Scanner can differentiate between open, closed and blocked ports.
+				# Connect to remote socket at address=(serverIP, port)
 				result = sock.connect_ex((serverIP, port))
 				sock.close()
+				
+        # Scanner can differentiate between open, closed and blocked ports.
 				if result == 0:
 					open += 1
 					print("Port, %s - Open               (%s)" % (port, port_description))

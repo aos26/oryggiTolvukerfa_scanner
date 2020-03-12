@@ -60,7 +60,6 @@ class SynScan():
 		try:
 			open = 0
 			closed_or_filtered = 0
-			timed_out = 0
 
 			# Try all the ports in the given range
 			for port in ports:
@@ -69,13 +68,15 @@ class SynScan():
 				port_description = self.well_known_port_descriptions[port,1]
 				srcport = RandShort()
 				conf.verb = 0 # Hide output
+
+				# Send and receive a packet to the destination IP, specified port, with flag S for SYN (only)
 				SYNACKpkt = sr1(IP(dst = serverIP)/TCP(sport = srcport, dport = port, flags = "S", options=[('Timestamp', (0,0))]), timeout=0.5)
 
-        	# Check if answer was received (is not None).
+        # Check if answer was received (is not None).
 				if SYNACKpkt:
 					result = SYNACKpkt.getlayer(TCP).flags
 				
-					# Check whether port is open
+					# Check whether port was open
 					if result == 0x12:
 						open += 1
 						print("Port, %s - Open               (%s)" % (port, port_description))
@@ -84,7 +85,7 @@ class SynScan():
 						if closed_and_filtered:
 							print("Port, %s - Closed (%s)" % (port, self.well_known_port_descriptions[port,1]))
 				
-			# No answer, port is likely filtered
+				# No answer, port is likely filtered
 				else:
 					print("Timeout reached: Port", port)
 					if closed_and_filtered:
