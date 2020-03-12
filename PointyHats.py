@@ -35,7 +35,7 @@ def extract_hosts(host):
 	return IPs
 
 def ping_host(address):
-	"""Return True if address is ping-able, False otherwise"""
+	"""Return True if address responded to ping, False otherwise"""
 
 	res = subprocess.call(['ping', '-c', '3', address], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) 
 	if res == 0: 
