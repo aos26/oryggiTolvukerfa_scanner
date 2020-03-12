@@ -32,6 +32,8 @@ Leiðbeiningar um keyrslu:
    innan virtual environment eru í sama kafla.
    Einnig er hægt að keyra forritið beint af skipanalínu, án virtual environment, 
    ef allir nauðsynlegir pakkar eru uppsettir hjá notandanum.  
+
+   Hægt að er hætta keyrslu forritsins með því að slá inn Ctrl+C.
    
    Forritið tekur við allt að 8 færibreytum (parameters), en þær eru eins og segir héreftir.
    -ho --hosts             : Þeir hosts sem á að skanna. Getur verið URL á vefsíðu, stök IP tala eða IP range á CIDR sniði.
